@@ -1,5 +1,3 @@
-import Jama.Matrix;
-
 /**
  * Created by Michał on 2017-12-13.
  */
@@ -15,8 +13,8 @@ public class NewSimplex {
         int rows = A.length + 1;
         int columns = A[0].length + 1;
         double[][] table = new double[rows][columns];
-        for(int i = 0; i < A.length; i++) {
-            for(int j = 0; j < A[0].length; j++) {
+        for (int i = 0; i < A.length; i++) {
+            for (int j = 0; j < A[0].length; j++) {
                 table[i][j] = A[i][j];
             }
         }
@@ -30,6 +28,7 @@ public class NewSimplex {
 
         //table.print(table.getRowDimension(), table.getColumnDimension());
 
+        printTable(table);
         table = transposeMatrix(table);
 
         table = getTableaux(table, isSmaler);
@@ -38,22 +37,24 @@ public class NewSimplex {
             int pivotRow = getPivotRow(table, pivotColumn);
             computePivotRow(table, pivotRow, pivotColumn);
             computeNotPivotRow(table, pivotRow, pivotColumn);
-            table.print(table.getRowDimension(), 4);
+            //table.print(table.getRowDimension(), 4);
+
+            printTable(table);
             pivotColumn = getPivotColumn(table);
         }
-        table.print(table.getRowDimension(), 4);
+        //table.print(table.getRowDimension(), 4);
+        printTable(table);
         getSolution(table);
     }
 
     private double[][] getTableaux(double[][] table, boolean[] isSmaler) {
         double[][] tableaux = new double[table.length][table[0].length + table.length]; // zainicjować zerami
 
-        for(int i = 0; i < table.length; i++) {
-            for(int j = 0; j < table[0].length - 1; j++) {
-                if(i == table.length - 1)  {
-                    tableaux[i][j] = - table[i][j];
-                }
-                else {
+        for (int i = 0; i < table.length; i++) {
+            for (int j = 0; j < table[0].length - 1; j++) {
+                if (i == table.length - 1) {
+                    tableaux[i][j] = -table[i][j];
+                } else {
                     tableaux[i][j] = table[i][j];
                 }
             }
@@ -62,31 +63,30 @@ public class NewSimplex {
 //           tableaux.set(i, i + table.getRowDimension() - 1, 1.0);
 //        }
 
-        for(int i = 0; i < tableaux.length - 1; i++) {
-            if(isSmaler[i]) {
-                tableaux.set(i, i + table.length - 1, 1.0); // tu
-            }
-            else {
-                tableaux.set(i, i + table.getRowDimension() - 1, -1.0);
+        for (int i = 0; i < tableaux.length - 1; i++) {
+            if (isSmaler[i]) {
+                tableaux[i][i + table.length - 1] = 1.0;
+            } else {
+                tableaux[i][i + table.length - 1] = -1.0;
             }
         }
-        tableaux.set(tableaux.getRowDimension() - 1, (2*table.getRowDimension()) - 2, 1.0);
+        tableaux[tableaux.length - 1][2 * table.length - 2] = 1.0;
 
-        for(int i = 0; i < tableaux.getRowDimension(); i++) {
-            tableaux.set(i, tableaux.getColumnDimension() - 1, table.get(i, table.getColumnDimension() - 1));
+        for (int i = 0; i < tableaux.length; i++) {
+            tableaux[i][tableaux[0].length - 1] = table[i][table[0].length - 1];
         }
-        tableaux.print(2, 2);
-
+        //tableaux.print(2, 2);
+        printTable(tableaux);
         return tableaux;
     }
 
-    private int getPivotColumn(Matrix tableaux) {
+    private int getPivotColumn(double[][] tableaux) {
         double min = 0;
         int index = -1;
-        for (int i = 0; i < tableaux.getColumnDimension(); i++) {
-            if(tableaux.get(tableaux.getRowDimension() - 1, i) < 0 && tableaux.get(tableaux.getRowDimension() - 1, i) != (-0.0)) {
-                if(tableaux.get(tableaux.getRowDimension() - 1, i) < min) {
-                    min = tableaux.get(tableaux.getRowDimension() - 1, i);
+        for (int i = 0; i < tableaux[0].length; i++) {
+            if (tableaux[tableaux.length - 1][i] < 0 && tableaux[tableaux.length - 1][i] != (-0.0)) {
+                if (tableaux[tableaux.length - 1][i] < min) {
+                    min = tableaux[tableaux.length - 1][i];
                     index = i;
                 }
             }
@@ -94,12 +94,12 @@ public class NewSimplex {
         return index;
     }
 
-    private int getPivotRow(Matrix tableaux, int pivotColumn) {
-        double min = tableaux.get(0, tableaux.getColumnDimension() - 1) / tableaux.get(0, pivotColumn);
+    private int getPivotRow(double[][] tableaux, int pivotColumn) {
+        double min = tableaux[0][tableaux[0].length - 1] / tableaux[0][pivotColumn];
         int returnRow = 0;
-        for (int i = 1; i < tableaux.getRowDimension() - 1; i++) {
-            double value =  tableaux.get(i, tableaux.getColumnDimension() - 1) / tableaux.get(i, pivotColumn);
-            if(value < min) {
+        for (int i = 1; i < tableaux.length - 1; i++) {
+            double value = tableaux[i][tableaux[0].length - 1] / tableaux[i][pivotColumn];
+            if (value < min) {
                 min = value;
                 returnRow = i;
             }
@@ -107,59 +107,66 @@ public class NewSimplex {
         return returnRow;
     }
 
-    private void computePivotRow(Matrix tableaux, int pivotRow, int pivotColumn) {
-        double pivot = tableaux.get(pivotRow, pivotColumn);
-        for (int i = 0; i < tableaux.getColumnDimension(); i++) {
-            tableaux.set(pivotRow, i, tableaux.get(pivotRow, i) / pivot);
+    private void computePivotRow(double[][] tableaux, int pivotRow, int pivotColumn) {
+        double pivot = tableaux[pivotRow][pivotColumn];
+        for (int i = 0; i < tableaux[0].length; i++) {
+            tableaux[pivotRow][i] = tableaux[pivotRow][i] / pivot;
         }
     }
 
-    private void computeNotPivotRow(Matrix tableaux, int pivotRow, int pivotColumn) {
-        double a = tableaux.get(tableaux.getRowDimension() - 1, pivotColumn) * (-1);
-        for (int i = 0; i < tableaux.getRowDimension(); i++) {
-            double value = tableaux.get(i, pivotColumn);
-            for(int j = 0; j < tableaux.getColumnDimension(); j++) {
-                if(i == pivotRow) {
-                }
-                else if(i == tableaux.getRowDimension() - 1) {
-                    tableaux.set(i, j, tableaux.get(i, j) + tableaux.get(pivotRow, j) * a);
-                }
-                else {
+    private void computeNotPivotRow(double[][] tableaux, int pivotRow, int pivotColumn) {
+        double a = tableaux[tableaux.length - 1][pivotColumn] * (-1);
+        for (int i = 0; i < tableaux.length; i++) {
+            double value = tableaux[i][pivotColumn];
+            for (int j = 0; j < tableaux[0].length; j++) {
+                if (i == pivotRow) {
+                } else if (i == tableaux.length - 1) {
+                    tableaux[i][j] = tableaux[i][j] + tableaux[pivotRow][j] * a;
+                } else {
 //                    tableaux.set(i, j, (-1*tableaux.get(pivotRow, j)) + tableaux.get(i, j));
-                    tableaux.set(i, j, tableaux.get(i, j) - value * tableaux.get(pivotRow, j));
+                    tableaux[i][j] = tableaux[i][j] - value * tableaux[pivotRow][j];
                 }
             }
         }
     }
 
-    private void getSolution(Matrix tableaux) {
-        for (int i = 0; i < tableaux.getColumnDimension() -1 - tableaux.getRowDimension(); i++) {
+    private void getSolution(double[][] tableaux) {
+        for (int i = 0; i < tableaux[0].length - 1 - tableaux.length; i++) {
             int b = -1;
             int idx = 0;
-            System.out.print("x"+i+ " = ");
-            for(int j = 0; j < tableaux.getRowDimension() -1; j++) {
-                if(tableaux.get(j, i) == 1) {
+            System.out.print("x" + i + " = ");
+            for (int j = 0; j < tableaux.length - 1; j++) {
+                if (tableaux[j][i] == 1) {
                     if (b == -1) {
                         b = 1;
                         idx = j;
-                    }
-                    else if (b == 1)
+                    } else if (b == 1)
                         b = 2;
                 }
             }
             if(b == 2 || b == -1){
                 System.out.println("0");
             } else if (b == 1) {
-                System.out.println(tableaux.get(idx, tableaux.getColumnDimension()-1));
+                System.out.println(tableaux[idx][tableaux[0].length - 1]);
             }
         }
     }
 
-    public static double[][] transposeMatrix(double [][] m){
+    public static double[][] transposeMatrix(double[][] m) {
         double[][] temp = new double[m[0].length][m.length];
         for (int i = 0; i < m.length; i++)
             for (int j = 0; j < m[0].length; j++)
                 temp[j][i] = m[i][j];
         return temp;
+    }
+
+    public static void printTable(double[][] table) {
+        for (int i = 0; i < table.length; i++) {
+            for (int j = 0; j < table[i].length; j++) {
+                System.out.print(table[i][j] + " ");
+            }
+            System.out.println("");
+        }
+        System.out.println("-----");
     }
 }
