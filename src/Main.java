@@ -39,7 +39,10 @@ public class Main {
 //    private static boolean[] isSmaler = {true, true, true};
 
     public static void main(String[] args) {
-        Simplex simplex = new Simplex(new Matrix(A), c, b, isSmaler, true);
+//        Simplex simplex = new Simplex(new Matrix(A), c, b, isSmaler, true);
+        Solve s = new Solve(args);
+        s.makeOneCriterion();
+        s.solve();
 //        String message = "wiadomość";
 //        byte[] bytes = message.getBytes();
 //        for (byte b: bytes

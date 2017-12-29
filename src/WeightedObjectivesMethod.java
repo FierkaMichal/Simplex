@@ -7,4 +7,6 @@ public class WeightedObjectivesMethod {
 
     public void makeF(List<Double[]> list) {
     }
+
+
 }
