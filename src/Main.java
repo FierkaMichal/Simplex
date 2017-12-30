@@ -39,9 +39,9 @@ public class Main {
 //    private static boolean[] isSmaler = {true, true, true};
 
     public static void main(String[] args) {
-        NewSimplex simplex = new NewSimplex(A, c, b, isSmaler, true);
-        System.out.println("\n\n\n\n\n");
-        Simplex s = new Simplex(new Matrix(A), c, b, isSmaler, true);
+//        NewSimplex simplex = new NewSimplex(A, c, b, isSmaler, true);
+//        System.out.println("\n\n\n\n\n");
+//        Simplex s = new Simplex(new Matrix(A), c, b, isSmaler, true);
 //        Simplex simplex = new Simplex(new Matrix(A), c, b, isSmaler, true);
         Solve sa = new Solve(args);
         sa.makeOneCriterion();

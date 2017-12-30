@@ -79,7 +79,7 @@ public class Solve {
             return null;
         }
         double[] result = new double[this.c.length];
-        Simplex simplex = new Simplex(new Matrix(A), c, b, isSmaller, true);
+        NewSimplex simplex = new NewSimplex(A, c, b, isSmaller, true);
         return result;
     }
 }

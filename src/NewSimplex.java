@@ -29,7 +29,7 @@ public class NewSimplex {
         //table.print(table.getRowDimension(), table.getColumnDimension());
 
         printTable(table);
-        table = transposeMatrix(table);
+        //table = transposeMatrix(table);
 
         table = getTableaux(table, isSmaler);
         int pivotColumn = getPivotColumn(table);
@@ -53,7 +53,7 @@ public class NewSimplex {
         for (int i = 0; i < table.length; i++) {
             for (int j = 0; j < table[0].length - 1; j++) {
                 if (i == table.length - 1) {
-                    tableaux[i][j] = -table[i][j];
+                    tableaux[i][j] = table[i][j];
                 } else {
                     tableaux[i][j] = table[i][j];
                 }
@@ -65,12 +65,12 @@ public class NewSimplex {
 
         for (int i = 0; i < tableaux.length - 1; i++) {
             if (isSmaler[i]) {
-                tableaux[i][i + table.length - 1] = 1.0;
+                tableaux[i][i + table[0].length - 1] = 1.0;
             } else {
-                tableaux[i][i + table.length - 1] = -1.0;
+                tableaux[i][i + table[0].length - 1] = -1.0;
             }
         }
-        tableaux[tableaux.length - 1][2 * table.length - 2] = 1.0;
+        tableaux[tableaux.length - 1][2 * table[0].length - 2] = 1.0;
 
         for (int i = 0; i < tableaux.length; i++) {
             tableaux[i][tableaux[0].length - 1] = table[i][table[0].length - 1];
@@ -95,13 +95,17 @@ public class NewSimplex {
     }
 
     private int getPivotRow(double[][] tableaux, int pivotColumn) {
-        double min = tableaux[0][tableaux[0].length - 1] / tableaux[0][pivotColumn];
+        double min = 1000000;
         int returnRow = 0;
+        boolean haveValue = false;
         for (int i = 1; i < tableaux.length - 1; i++) {
-            double value = tableaux[i][tableaux[0].length - 1] / tableaux[i][pivotColumn];
-            if (value < min) {
-                min = value;
-                returnRow = i;
+            double value =  tableaux[i][tableaux[0].length - 1] / tableaux[i][pivotColumn];
+            if(value > 0) {
+                if (value < min || !haveValue) {
+                    min = value;
+                    returnRow = i;
+                    haveValue = true;
+                }
             }
         }
         return returnRow;
@@ -142,9 +146,13 @@ public class NewSimplex {
                         idx = j;
                     } else if (b == 1)
                         b = 2;
+                } else if (tableaux[j][i] != 0) {
+                    if(b != -1 || b != 1) {
+                        b = -2;
+                    }
                 }
             }
-            if(b == 2 || b == -1){
+            if(b == 2 || b == -1 || b == -2){
                 System.out.println("0");
             } else if (b == 1) {
                 System.out.println(tableaux[idx][tableaux[0].length - 1]);
