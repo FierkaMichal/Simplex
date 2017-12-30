@@ -43,9 +43,9 @@ public class Main {
         System.out.println("\n\n\n\n\n");
         Simplex s = new Simplex(new Matrix(A), c, b, isSmaler, true);
 //        Simplex simplex = new Simplex(new Matrix(A), c, b, isSmaler, true);
-        Solve s = new Solve(args);
-        s.makeOneCriterion();
-        s.solve();
+        Solve sa = new Solve(args);
+        sa.makeOneCriterion();
+        sa.solve();
 //        String message = "wiadomość";
 //        byte[] bytes = message.getBytes();
 //        for (byte b: bytes
