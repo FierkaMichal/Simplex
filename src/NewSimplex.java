@@ -155,7 +155,7 @@ public class NewSimplex {
             if(b == 2 || b == -1 || b == -2){
                 System.out.println("0");
             } else if (b == 1) {
-                System.out.println(tableaux[idx][tableaux[0].length - 1]);
+                System.out.println(String.format("%.2f", tableaux[idx][tableaux[0].length - 1]));
             }
         }
     }
@@ -171,7 +171,7 @@ public class NewSimplex {
     public static void printTable(double[][] table) {
         for (int i = 0; i < table.length; i++) {
             for (int j = 0; j < table[i].length; j++) {
-                System.out.print(table[i][j] + " ");
+                System.out.print(String.format("%.2f", table[i][j]) + " ");
             }
             System.out.println("");
         }
