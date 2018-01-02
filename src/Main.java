@@ -7,8 +7,9 @@ public class Main {
 
     public static void main(String[] args) {
         Solve sa = new Solve(args);
+        sa.printData();
         sa.makeOneCriterion();
-        sa.solve();
-
+        double[] result = sa.solve();
+        sa.printSolution(result);
     }
 }

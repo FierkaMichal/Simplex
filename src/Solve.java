@@ -8,8 +8,8 @@ public class Solve {
     private static double d1 = 12.0; // ładowność cysterny 1
     private static double d2 = 8.0; // ładowność cysterny 2
 
-    private static double z1 = 5.0; // koszt transportu cystarny 1
-    private static double z2 = 3.0; // koszt transportu cystarny 2
+    private static double z1 = 6.0; // koszt transportu cystarny 1
+    private static double z2 = 8.0; // koszt transportu cystarny 2
 
     private double v = 200.0; //ilość towaru do przewiezienia
     private static double w = 1500; // maksymalny koszt
@@ -70,7 +70,6 @@ public class Solve {
         this.c = new double[c1.length];
         for(int i = 0; i < c1.length; i++) {
             c[i] = (c1[i] + c2[i])/2;
-            System.out.println(c[i]);
         }
     }
 
@@ -80,6 +79,30 @@ public class Solve {
         }
         double[] result = new double[this.c.length];
         NewSimplex simplex = new NewSimplex(A, c, b, isSmaller, true);
+        result = simplex.getSolution();
         return result;
+    }
+
+    public void printData() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Samochod 1: ilosc = ");
+        sb.append(b[0]); sb.append(" pojemnosc = ");
+        sb.append(-c1[0]); sb.append(" koszt = "); sb.append(c2[0]);
+        sb.append("\nSamochod 2: ilosc = ");
+        sb.append(b[1]); sb.append(" pojemnosc = ");
+        sb.append(-c1[1]); sb.append(" koszt = "); sb.append(c2[1]);
+        sb.append("\nMaksymalny koszt = "); sb.append(b[2]);
+        sb.append("\nMaksymalna ilosc towaru do transportu = "); sb.append(b[4]);
+        sb.append("\nMinimalna ilosc towaru do przewiezienia = "); sb.append(b[3]);
+        System.out.println(sb.toString() + "\n");
+    }
+
+    public void printSolution(double[] result) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Liczba samochodow 1 = "); sb.append(Math.floor(result[0]));
+        sb.append("\nLiczba samochodow 2 = "); sb.append(Math.floor(result[1]));
+        sb.append("\nIlosc towaru do transportu = "); sb.append((-c1[0]*Math.floor(result[0])) + (-c1[1]*Math.floor(result[1])));
+        sb.append("\nKoszt = "); sb.append((c2[0]*Math.floor(result[0])) + (c2[1]*Math.floor(result[1])));
+        System.out.println(sb.toString());
     }
 }

@@ -6,10 +6,9 @@ public class NewSimplex {
     private double[][] a;   // tableaux
     private int M;          // number of constraints
     private int N;          // number of original variables
+    private double[][] tableau;
 
-    //public NewSimplex(Matrix A, double[] c, double b[], boolean[] isSmaler, boolean isMax) {
     public NewSimplex(double[][] A, double[] c, double b[], boolean[] isSmaler, boolean isMax) {
-        //Matrix table = new Matrix(A.getRowDimension() + 1, A.getColumnDimension() + 1);
         int rows = A.length + 1;
         int columns = A[0].length + 1;
         double[][] table = new double[rows][columns];
@@ -26,29 +25,23 @@ public class NewSimplex {
             table[rows - 1][i] = c[i];
         }
 
-        //table.print(table.getRowDimension(), table.getColumnDimension());
-
-        printTable(table);
-        //table = transposeMatrix(table);
-
+        System.out.println("-----");
         table = getTableaux(table, isSmaler);
         int pivotColumn = getPivotColumn(table);
         while (pivotColumn != -1) {
             int pivotRow = getPivotRow(table, pivotColumn);
             computePivotRow(table, pivotRow, pivotColumn);
             computeNotPivotRow(table, pivotRow, pivotColumn);
-            //table.print(table.getRowDimension(), 4);
-
             printTable(table);
             pivotColumn = getPivotColumn(table);
         }
-        //table.print(table.getRowDimension(), 4);
+
         printTable(table);
-        getSolution(table);
+        this.tableau = table;
     }
 
     private double[][] getTableaux(double[][] table, boolean[] isSmaler) {
-        double[][] tableaux = new double[table.length][table[0].length + table.length]; // zainicjować zerami
+        double[][] tableaux = new double[table.length][table[0].length + table.length];
 
         for (int i = 0; i < table.length; i++) {
             for (int j = 0; j < table[0].length - 1; j++) {
@@ -59,9 +52,6 @@ public class NewSimplex {
                 }
             }
         }
-//        for(int i = 0; i < tableaux.getRowDimension(); i++) {
-//           tableaux.set(i, i + table.getRowDimension() - 1, 1.0);
-//        }
 
         for (int i = 0; i < tableaux.length - 1; i++) {
             if (isSmaler[i]) {
@@ -75,7 +65,6 @@ public class NewSimplex {
         for (int i = 0; i < tableaux.length; i++) {
             tableaux[i][tableaux[0].length - 1] = table[i][table[0].length - 1];
         }
-        //tableaux.print(2, 2);
         printTable(tableaux);
         return tableaux;
     }
@@ -127,37 +116,37 @@ public class NewSimplex {
                 } else if (i == tableaux.length - 1) {
                     tableaux[i][j] = tableaux[i][j] + tableaux[pivotRow][j] * a;
                 } else {
-//                    tableaux.set(i, j, (-1*tableaux.get(pivotRow, j)) + tableaux.get(i, j));
                     tableaux[i][j] = tableaux[i][j] - value * tableaux[pivotRow][j];
                 }
             }
         }
     }
 
-    private void getSolution(double[][] tableaux) {
-        for (int i = 0; i < tableaux[0].length - 1 - tableaux.length; i++) {
+    public double[] getSolution() {
+        double[] result = new double[tableau[0].length - 1 - tableau.length];
+        for (int i = 0; i < tableau[0].length - 1 - tableau.length; i++) {
             int b = -1;
             int idx = 0;
-            System.out.print("x" + i + " = ");
-            for (int j = 0; j < tableaux.length - 1; j++) {
-                if (tableaux[j][i] == 1) {
+            for (int j = 0; j < tableau.length - 1; j++) {
+                if (tableau[j][i] == 1) {
                     if (b == -1) {
                         b = 1;
                         idx = j;
                     } else if (b == 1)
                         b = 2;
-                } else if (tableaux[j][i] != 0) {
+                } else if (tableau[j][i] != 0) {
                     if(b != -1 || b != 1) {
                         b = -2;
                     }
                 }
             }
             if(b == 2 || b == -1 || b == -2){
-                System.out.println("0");
+                result[i] = 0;
             } else if (b == 1) {
-                System.out.println(String.format("%.2f", tableaux[idx][tableaux[0].length - 1]));
+                result[i] = tableau[idx][tableau[0].length - 1];
             }
         }
+        return result;
     }
 
     public static double[][] transposeMatrix(double[][] m) {
