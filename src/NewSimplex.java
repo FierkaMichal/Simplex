@@ -60,7 +60,7 @@ public class NewSimplex {
                 tableaux[i][i + table[0].length - 1] = -1.0;
             }
         }
-        tableaux[tableaux.length - 1][2 * table[0].length - 2] = 1.0;
+        tableaux[tableaux.length - 1][tableaux[0].length - 2] = 1.0;
 
         for (int i = 0; i < tableaux.length; i++) {
             tableaux[i][tableaux[0].length - 1] = table[i][table[0].length - 1];

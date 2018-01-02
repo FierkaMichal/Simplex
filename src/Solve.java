@@ -6,10 +6,10 @@ public class Solve {
     private static double y2 = 50; // ilosc dostepnych cystern 2
 
     private static double d1 = 12.0; // ładowność cysterny 1
-    private static double d2 = 8.0; // ładowność cysterny 2
+    private static double d2 = 20.0; // ładowność cysterny 2
 
     private static double z1 = 6.0; // koszt transportu cystarny 1
-    private static double z2 = 8.0; // koszt transportu cystarny 2
+    private static double z2 = 10.0; // koszt transportu cystarny 2
 
     private double v = 200.0; //ilość towaru do przewiezienia
     private static double w = 1500; // maksymalny koszt
@@ -98,11 +98,19 @@ public class Solve {
     }
 
     public void printSolution(double[] result) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Liczba samochodow 1 = "); sb.append(Math.floor(result[0]));
-        sb.append("\nLiczba samochodow 2 = "); sb.append(Math.floor(result[1]));
-        sb.append("\nIlosc towaru do transportu = "); sb.append((-c1[0]*Math.floor(result[0])) + (-c1[1]*Math.floor(result[1])));
-        sb.append("\nKoszt = "); sb.append((c2[0]*Math.floor(result[0])) + (c2[1]*Math.floor(result[1])));
-        System.out.println(sb.toString());
+        if(result[0] > b[0] || result[1] > b[1]){
+            System.out.println("Brak rozwiazania dla tych danych");
+        } else {
+            StringBuilder sb = new StringBuilder();
+            sb.append("Liczba samochodow 1 = ");
+            sb.append(Math.floor(result[0]));
+            sb.append("\nLiczba samochodow 2 = ");
+            sb.append(Math.floor(result[1]));
+            sb.append("\nIlosc towaru do transportu = ");
+            sb.append((-c1[0] * Math.floor(result[0])) + (-c1[1] * Math.floor(result[1])));
+            sb.append("\nKoszt = ");
+            sb.append((c2[0] * Math.floor(result[0])) + (c2[1] * Math.floor(result[1])));
+            System.out.println(sb.toString());
+        }
     }
 }
