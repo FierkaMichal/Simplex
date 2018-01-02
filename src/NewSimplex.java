@@ -32,11 +32,11 @@ public class NewSimplex {
             int pivotRow = getPivotRow(table, pivotColumn);
             computePivotRow(table, pivotRow, pivotColumn);
             computeNotPivotRow(table, pivotRow, pivotColumn);
-            printTable(table);
+            //printTable(table);
             pivotColumn = getPivotColumn(table);
         }
 
-        printTable(table);
+        //printTable(table);
         this.tableau = table;
     }
 
@@ -65,7 +65,7 @@ public class NewSimplex {
         for (int i = 0; i < tableaux.length; i++) {
             tableaux[i][tableaux[0].length - 1] = table[i][table[0].length - 1];
         }
-        printTable(tableaux);
+        //printTable(tableaux);
         return tableaux;
     }
 
@@ -87,7 +87,7 @@ public class NewSimplex {
         double min = 1000000;
         int returnRow = 0;
         boolean haveValue = false;
-        for (int i = 1; i < tableaux.length - 1; i++) {
+        for (int i = 0; i < tableaux.length - 1; i++) {
             double value =  tableaux[i][tableaux[0].length - 1] / tableaux[i][pivotColumn];
             if(value > 0) {
                 if (value < min || !haveValue) {

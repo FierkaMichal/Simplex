@@ -98,8 +98,8 @@ public class Solve {
     }
 
     public void printSolution(double[] result) {
-        if(result[0] > b[0] || result[1] > b[1]){
-            System.out.println("Brak rozwiazania dla tych danych");
+        if(!isValidSolution(result)){
+            System.out.println("Brak rozwiazan dopuszczalnych dla tych danych");
         } else {
             StringBuilder sb = new StringBuilder();
             sb.append("Liczba samochodow 1 = ");
@@ -112,5 +112,11 @@ public class Solve {
             sb.append((c2[0] * Math.floor(result[0])) + (c2[1] * Math.floor(result[1])));
             System.out.println(sb.toString());
         }
+    }
+
+    private boolean isValidSolution(double[] result) {
+        if(result[0] > b[0] || result[1] > b[1] || (-c1[0] * Math.floor(result[0])) + (-c1[1] * Math.floor(result[1])) < b[3])
+            return false;
+        return true;
     }
 }
